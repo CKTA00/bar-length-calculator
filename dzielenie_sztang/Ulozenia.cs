@@ -251,14 +251,6 @@ namespace dzielenie_sztang
             _ileKonstrukcji++;
         }
 
-        //delegat
-        public static int porownajReszty(Ulozenie u1, Ulozenie u2)
-        {
-            if (u1.reszta > u2.reszta) return 1;
-            else if (u1.reszta < u2.reszta) return -1;
-            else return 0;
-        }
-
         public float AnalizaResztek(float dl_sztabki)
         {
             float s = 0;

@@ -205,16 +205,6 @@ namespace dzielenie_sztang
         }
 
         /// <summary>
-        /// Sortuje ułożenia wg. reszty (od najmniejszej do największej)
-        /// </summary>
-        private void SortujWgReszty()
-        {
-            // mial byc merge sort ale w sumie może być ten
-            wszystkie_uklady.Sort(Ulozenie.porownajReszty);
-        }
-
-
-        /// <summary>
         /// Wylicza ile potrzeba jakich sztabek (Ułożeń) aby pokryć zasoby.
         /// </summary>
         private void WybierzWymaganeSztabki()
@@ -266,65 +256,9 @@ namespace dzielenie_sztang
             KonwertujZasoby();
             SortujTypyElementow();
             WyznaczWszystkieMozliweUlozenia();
-            SortujWgReszty();
             WybierzWymaganeSztabki();
             return wszystkie_uklady;
         }
-
-
-        /*
-        static void Main(string[] args)
-        {
-            Obliczenia o = new Obliczenia();
-            Console.WriteLine("MAIN");
-            Console.WriteLine("Wprowadź długość sztabki: ");
-            o.dlugosc_sztabki_cm = float.Parse(Console.ReadLine());
-            Console.WriteLine("Wprowadź długości elementów. Wpisz x aby zakończyć wprowadzanie. ");
-            string menu = "0";
-            float dana;
-            int ile_dana;
-            Elementy el = new Elementy();
-            while (menu != "x" && menu != "d")
-            {
-                Console.Write("\tWprowadź długość elementu: ");
-                menu = Console.ReadLine();
-                if (float.TryParse(menu, out dana))
-                {
-                    el.dlugosc_cm = dana;
-                    Console.Write("\tIle: ");
-                    menu = Console.ReadLine();
-                    if (int.TryParse(menu, out ile_dana))
-                    {
-                        el.ile = ile_dana;
-                        o.DodajTypElementu(el);
-                    }
-                }
-            }
-            Console.WriteLine("Zakończono podawanie danych");
-            //if (menu == "d") o.dout = DebugOutput.ALL;
-            //else o.dout = DebugOutput.BASIC;
-            o.SortujTypyElementow();
-            //if (o.dout == DebugOutput.ALL) o._pokazZasoby();
-
-
-            o.WyznaczWszystkieMozliweUlozenia();
-            //if (o.dout >= DebugOutput.BASIC) o._pokazUlozenia();
-            //Console.WriteLine("Liczba Ułożeń to {0}\n", Ulozenie._ileKonstrukcji-1);
-
-            o.SortujWgReszty();
-
-            //List<Ulozenie> wynik = o.WybierzWymaganeSztabki();
-            o.WybierzWymaganeSztabki();
-            foreach (var u in o.wszystkie_uklady)
-            {
-                Console.WriteLine(u.ToString());
-            }
-
-
-
-            Console.ReadKey();
-        }
-        */
     }
 
     
