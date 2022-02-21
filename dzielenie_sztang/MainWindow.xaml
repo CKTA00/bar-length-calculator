@@ -1,0 +1,131 @@
+﻿<Window x:Class="dzielenie_sztang.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:local="clr-namespace:dzielenie_sztang"
+        mc:Ignorable="d"
+        Title="Podział sztangi na elementy" Height="500" Width="700" MinHeight="400" MinWidth="300">
+    <Window.Resources>
+        <sys:Double x:Key="BtH">32</sys:Double>
+        <sys:Double x:Key="BoxW">105</sys:Double>
+    </Window.Resources>
+
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MinWidth="{StaticResource BoxW}"/>
+            <ColumnDefinition Width="2*" MinWidth="{StaticResource BoxW}"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.ColumnSpan="2" Orientation="Horizontal">
+
+        </StackPanel>
+
+        <ScrollViewer VerticalScrollBarVisibility="Auto" Margin="0" Grid.Row="1">
+            <StackPanel Margin="3,3,0,3" Background="White" >
+                <Label HorizontalAlignment="Left" Content="Cechy sztabki:" VerticalAlignment="Top" FontWeight="SemiBold" FontSize="14" Padding="1,3,1,0"/>
+                <WrapPanel HorizontalAlignment="Stretch">
+                    <StackPanel Margin="3" x:Name="MiniPanelProfil">
+                        <Label HorizontalAlignment="Left" Content="profil:" VerticalAlignment="Top" Padding="3"/>
+                        <ComboBox x:Name="profilCB" HorizontalAlignment="Left" Height="22"  VerticalAlignment="Top" Width="{StaticResource BoxW}" SelectionChanged="ProfilCB_SelectionChanged" IsTabStop="False">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding profil.nazwa_profilu}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Margin="3" x:Name="MiniPanelSztabka" Background="Transparent">
+                        <Label HorizontalAlignment="Left" Content="długość w cm:" VerticalAlignment="Top" Padding="3"/>
+                        <TextBox x:Name="sztabkaTB" HorizontalAlignment="Stretch" Height="22" Width="{StaticResource BoxW}" MaxLines="1" LostFocus="SztabkaTB_LostFocus" IsTabStop="False"/>
+                    </StackPanel>
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Stretch">
+
+                    <Button x:Name="NowyProfilB" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" IsTabStop="False" Click="NowyProfilB_Click" ToolTip="Dodaj nowy profil do obliczeń">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Image Source="img/prof_nowy.png" Margin="1"></Image>
+                            <!--<TextBlock VerticalAlignment="Center" Margin="2">nowy profil</TextBlock>-->
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="UsunProfilB" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" IsTabStop="False" Click="UsunProfilB_Click" ToolTip="Usuń zaznaczony profil z obliczeń.">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Image Margin="1" Source="img/prof_usun.png"></Image>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="ObliczB" Content=" oblicz "  HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" Click="ObliczB_Click" IsTabStop="False" ToolTip="Oblicz optymalny podział dla wszystkich dodanych pofili."/>
+                </WrapPanel>
+                <CheckBox x:Name="ShortCB" Content="Skrócona wersja"   IsChecked="True" IsTabStop="False" Height="15"/>
+
+
+                <Label HorizontalAlignment="Left" VerticalAlignment="Top"  Content="Dodaj nowy element:" FontWeight="SemiBold" FontSize="14" Padding="1,5,1,1"/>
+                <WrapPanel HorizontalAlignment="Stretch" x:Name="PanelDodawaniaElementu">
+                    <StackPanel Margin="3">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto"  Padding="3">długość elementu:</Label>
+                        <TextBox x:Name="DlugoscTB" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="{StaticResource BoxW}" MaxLines="1" TextChanged="DlugoscTB_TextChanged"/>
+                    </StackPanel>
+                    <StackPanel Margin="3">
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Height="Auto" Padding="3">ile elementów:</Label>
+                        <TextBox x:Name="IleTB" HorizontalAlignment="Left" Height="22" VerticalAlignment="Top" Width="{StaticResource BoxW}" MaxLines="1" TextChanged="IleTB_TextChanged"/>
+                    </StackPanel>
+                </WrapPanel>
+
+
+
+                <!--<Label HorizontalAlignment="Left" VerticalAlignment="Top" Width="199" RenderTransformOrigin="-0.68,0.812" FontWeight="SemiBold" FontSize="14" Padding="1">Lista elementów:</Label>-->
+                <WrapPanel Orientation="Horizontal" HorizontalAlignment="Stretch" x:Name="PanelPrzyciskowElementu">
+                    <Button x:Name="DodajB" HorizontalAlignment="Left" Width="Auto" Click="DodajB_Click" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" VerticalAlignment="Top" ToolTip="Dodaj nowy element o powyższych parametrach.">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Image Margin="1" Source="img/elem_plus.png"></Image>
+                            <TextBlock VerticalAlignment="Center" Margin="2">dodaj</TextBlock>
+
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="UsunB" Click="UsunB_Click"  Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" ToolTip="Usuń zaznaczone elementy." IsTabStop="False">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Image Margin="1" Source="img/elem_minus.png"></Image>
+                            <TextBlock VerticalAlignment="Center" Margin="2">usuń</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button x:Name="WyczyscB" Click="Wyczysc_Click" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" ToolTip="Wyczyść całą liste." IsTabStop="False">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                            <Image Margin="1" Source="img/elem_czysc.png"></Image>
+                            <TextBlock VerticalAlignment="Center" Margin="2">wyczyść</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+
+                <DataGrid x:Name="tabelaElementow" Grid.Row="0" Width="Auto" VerticalAlignment="Stretch" Margin="3,3,0,3" CanUserResizeColumns="False" CanUserResizeRows="False" CanUserSortColumns="false" CanUserReorderColumns="false"  BorderBrush="#FF688CAF" IsTabStop="False">
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="FontSize"  Value="11"/>
+                        </Style>
+                    </DataGrid.Resources>
+                    <DataGrid.Columns>
+                        <!--<DataGridTextColumn Binding="{Binding id}" ClipboardContentBinding="{x:Null}" Header="L.p."  Width="30" IsReadOnly="true"/>-->
+                        <DataGridTextColumn Binding="{Binding DlugoscCm, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Długość elementu"  Width="110" />
+                        <DataGridTextColumn Binding="{Binding Ile, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}"  Header="Ilość elementów" Width="90" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <GridSplitter Grid.RowSpan="2" Grid.Column="1"  Width="3" HorizontalAlignment="Left" Margin="0" Background="AliceBlue" IsTabStop="False"/>
+
+        <TextBox x:Name="WynikTB" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1" Margin="3,3,3,3" TextWrapping="Wrap" IsReadOnly="True" VerticalScrollBarVisibility="Visible" IsTabStop="False"/>
+
+        <DockPanel  Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock HorizontalAlignment="Right" DockPanel.Dock="Right"  Margin="1" FontSize="10" Background="Azure" Foreground="LightSlateGray">Przemysław Kożuch</TextBlock>
+            <TextBlock Name="PasekInformacji" HorizontalAlignment="Stretch" Margin="1"  FontSize="10" Background="Azure" Foreground="CornflowerBlue" >Pasek informacji</TextBlock>
+        </DockPanel>
+        
+        
+    </Grid>
+</Window>
