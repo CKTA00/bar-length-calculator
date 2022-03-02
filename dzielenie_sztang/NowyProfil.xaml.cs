@@ -54,7 +54,6 @@ namespace dzielenie_sztang
             }
             catch
             {
-                MessageBox.Show( "Nie odnaleziono pliku z profilami.", "Błąd", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 brak_pliku = true;
             }
            
