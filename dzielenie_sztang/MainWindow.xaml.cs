@@ -26,7 +26,7 @@ namespace dzielenie_sztang
     /// </summary>
     public partial class MainWindow : Window
     {
-        static string wersja = "2.0";
+        static string wersja = "2.1";
         /// <summary>
         /// Długość sztabki obecnie wybranego profilu. Zastępuje Binding ponieważ jest to jedna z pierwszych zmiennych, które wprowadziłem, zanim zrozumiałem Binding. (bruh)
         /// </summary>
