@@ -10,8 +10,6 @@ namespace bar_length_calculator
     {
         public string profileName { get; set; }
         public string presentationName { get; set; }
-        int ID { get; }
-        static int currentID;
 
         public BarProfile(string presentationName)
         {
@@ -25,7 +23,6 @@ namespace bar_length_calculator
                 this.presentationName = presentationName;
                 profileName = presentationName;
             }
-            ID = currentID++;
         }
     }
 }
