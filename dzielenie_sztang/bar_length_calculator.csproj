@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{4B13D744-D29D-49FC-B521-7E754794537B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>dzielenie_sztang</RootNamespace>
-    <AssemblyName>dzielenie_sztang</AssemblyName>
+    <RootNamespace>bar_length_calculator</RootNamespace>
+    <AssemblyName>bar_length_calculator</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -81,6 +81,7 @@
       <DependentUpon>NowyProfil.xaml</DependentUpon>
     </Compile>
     <Compile Include="BarProfile.cs" />
+    <Compile Include="ShowMode.cs" />
     <Compile Include="Ulozenia.cs" />
     <Compile Include="Walidacja.cs" />
     <Page Include="MainWindow.xaml">

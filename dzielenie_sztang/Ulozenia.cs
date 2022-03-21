@@ -7,15 +7,6 @@ using System.Threading.Tasks;
 
 namespace bar_length_calculator
 {
-    enum ShowMode
-    {
-        Default,
-        Short,
-        All,
-        AllShort,
-        Old
-    }
-
     class Ulozenie
     {
         public static int _ileKonstrukcji;
