@@ -14,25 +14,25 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     /// <summary>
     /// Logika interakcji dla klasy NowyProfil.xaml
     /// </summary>
     public partial class NowyProfil : Window
     {
-        public ObservableCollection<Profil> lista_profili { get; set; }
+        public ObservableCollection<BarProfile> lista_profili { get; set; }
 
-        public Profil WybranyProfil {
+        public BarProfile WybranyProfil {
             get
             {
                 if ((bool)ZLlistyRB.IsChecked)
                 {
-                    return ProfilZListyCBX.SelectedItem as Profil;
+                    return ProfilZListyCBX.SelectedItem as BarProfile;
                 }
                 else
                 {
-                    return new Profil(DowolnyTBX.Text);
+                    return new BarProfile(DowolnyTBX.Text);
                 }
             }
         }
@@ -40,7 +40,7 @@ namespace dzielenie_sztang
         public NowyProfil()
         {
             bool brak_pliku = false;
-            lista_profili = new ObservableCollection<Profil>();
+            lista_profili = new ObservableCollection<BarProfile>();
             try
             {
                 string[] lines = System.IO.File.ReadAllLines(Environment.CurrentDirectory + "\\profile.txt");
@@ -48,7 +48,7 @@ namespace dzielenie_sztang
                 {
                     foreach (var line in lines)
                     {
-                        lista_profili.Add(new Profil(line));
+                        lista_profili.Add(new BarProfile(line));
                     }
                 }
             }

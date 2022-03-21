@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     enum ShowMode
     {

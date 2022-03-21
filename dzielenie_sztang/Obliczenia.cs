@@ -9,7 +9,7 @@ using System.Windows;
 using System.ComponentModel;
 //using System.Windows.Data;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     class Obliczenia
     {
@@ -19,7 +19,7 @@ namespace dzielenie_sztang
         /// </summary>
         public float dlugosc_sztabki_cm { get; set; }
 
-        public Profil profil { get; set; }
+        public BarProfile profil { get; set; }
 
         /// <summary>
         /// lista wszystkich zasobów (rodzaju elementów i ich ilości) dodanych przez użytkownika
@@ -59,7 +59,7 @@ namespace dzielenie_sztang
 
         public override string ToString()
         {
-            return profil.nazwa_profilu + ": " + dlugosc_sztabki_cm + " cm";
+            return profil.profileName + ": " + dlugosc_sztabki_cm + " cm";
         }
 
        
@@ -70,10 +70,10 @@ namespace dzielenie_sztang
             zasoby = new List<Elementy>();
             Zasoby = new ObservableCollection<ElementyObiekt>();
             wszystkie_uklady = new List<Ulozenie>();
-            this.profil = new Profil(profil);
+            this.profil = new BarProfile(profil);
         }
 
-        public Obliczenia(Profil profil)
+        public Obliczenia(BarProfile profil)
         {
             //ile_typow = 0;
             zasoby = new List<Elementy>();

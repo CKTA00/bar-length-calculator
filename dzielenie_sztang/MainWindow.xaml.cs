@@ -17,7 +17,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     
 
@@ -263,26 +263,26 @@ namespace dzielenie_sztang
                 string errorMessage;
                 if (!WprowadzonoPoprawnieSztabke(profil.dlugosc_sztabki_cm, out errorMessage))
                 {
-                    errorMessage += "\nBłąd wystąpił w profilu " + profil.profil.nazwa_profilu + ".\nSprawdź pole zaznaczone na czerwono.";
+                    errorMessage += "\nBłąd wystąpił w profilu " + profil.profil.profileName + ".\nSprawdź pole zaznaczone na czerwono.";
                     MessageBox.Show(errorMessage, "Błędne dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
 
                 if (dana.dlugosc_cm > profil.dlugosc_sztabki_cm)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profil.nazwa_profilu,
+                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                         "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
                 if (dana.dlugosc_cm <= 0)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.nazwa_profilu,
+                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
                 if (dana.ile <= 0)
                 {
-                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.nazwa_profilu,
+                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
@@ -307,8 +307,8 @@ namespace dzielenie_sztang
 
             if (!kontynuuj)
                 WynikTB.Clear();
-            if(profil.profil.prezentacja!="")
-                WynikTB.Text += "PROFIL " + profil.profil.prezentacja + ":\n";
+            if(profil.profil.presentationName!="")
+                WynikTB.Text += "PROFIL " + profil.profil.presentationName + ":\n";
             WynikTB.Text+=WyswietlWyniki();
             return true;
         }

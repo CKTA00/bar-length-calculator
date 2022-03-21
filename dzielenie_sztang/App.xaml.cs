@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     /// <summary>
     /// Logika interakcji dla klasy App.xaml

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     class Walidacja : ValidationRule
     {

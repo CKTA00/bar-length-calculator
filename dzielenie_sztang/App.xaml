@@ -1,7 +1,7 @@
-﻿<Application x:Class="dzielenie_sztang.App"
+﻿<Application x:Class="bar_length_calculator.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:dzielenie_sztang"
+             xmlns:local="clr-namespace:bar_length_calculator"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          

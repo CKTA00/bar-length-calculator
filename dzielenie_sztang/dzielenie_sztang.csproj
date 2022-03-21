@@ -78,7 +78,7 @@
     <Compile Include="NowyProfil.xaml.cs">
       <DependentUpon>NowyProfil.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Profil.cs" />
+    <Compile Include="BarProfile.cs" />
     <Compile Include="Ulozenia.cs" />
     <Compile Include="Walidacja.cs" />
     <Page Include="MainWindow.xaml">
