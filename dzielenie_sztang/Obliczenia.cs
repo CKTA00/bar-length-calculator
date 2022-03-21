@@ -31,7 +31,7 @@ namespace bar_length_calculator
         /// <summary>
         /// Tutaj wgrane i przechowane zostaną wszystkie rodzaje ułożeń elementów na sztabce
         /// </summary>
-        private List<Ulozenie> wszystkie_uklady;
+        private List<Arrangement> wszystkie_uklady;
 
         //public DebugOutput dout = DebugOutput.NONE;
 
@@ -69,7 +69,7 @@ namespace bar_length_calculator
             //ile_typow = 0;
             zasoby = new List<Element>();
             Zasoby = new ObservableCollection<ElementObject>();
-            wszystkie_uklady = new List<Ulozenie>();
+            wszystkie_uklady = new List<Arrangement>();
             this.profil = new BarProfile(profil);
         }
 
@@ -78,7 +78,7 @@ namespace bar_length_calculator
             //ile_typow = 0;
             zasoby = new List<Element>();
             Zasoby = new ObservableCollection<ElementObject>();
-            wszystkie_uklady = new List<Ulozenie>();
+            wszystkie_uklady = new List<Arrangement>();
             this.profil = profil;
         }
 
@@ -165,14 +165,14 @@ namespace bar_length_calculator
             //KonwertujZasoby();
             wszystkie_uklady.Clear();
             wszystkie_uklady.AddRange(WyznaczPodulozenie(dlugosc_sztabki_cm, dlugosc_sztabki_cm));
-            wszystkie_uklady.Remove(wszystkie_uklady.Last<Ulozenie>());
-            foreach (var u in wszystkie_uklady) u.AnalizaResztek(dlugosc_sztabki_cm);
+            wszystkie_uklady.Remove(wszystkie_uklady.Last<Arrangement>());
+            foreach (var u in wszystkie_uklady) u.CalculateRemnants(dlugosc_sztabki_cm);
             //usuń argument formalny i zastąp zmienną statyczną wgrywaną w konstruktorze
         }
 
-        private List<Ulozenie> WyznaczPodulozenie(float dl_sztabeczki, float max_dl_elementu)
+        private List<Arrangement> WyznaczPodulozenie(float dl_sztabeczki, float max_dl_elementu)
         {
-            List<Ulozenie> lista = new List<Ulozenie>();
+            List<Arrangement> lista = new List<Arrangement>();
             float roz;
             for (int i = 0; i < zasoby.Count; ++i)// i to numer zasobu
             {
@@ -185,12 +185,12 @@ namespace bar_length_calculator
                         --e.quantity;
                         zasoby[i] = e;
 
-                        List<Ulozenie> l = new List<Ulozenie>();
+                        List<Arrangement> l = new List<Arrangement>();
                         l = WyznaczPodulozenie(roz, zasoby[i].length);
 
                         foreach (var u in l)
                         {
-                            u.DodajElement(i);//dodaje element o numerze zasobu i
+                            u.AddElement(i);//dodaje element o numerze zasobu i
                         }
                         lista.AddRange(l);
                         ++e.quantity;
@@ -199,7 +199,7 @@ namespace bar_length_calculator
                 }//else nic nie rób   
             }
 
-            lista.Add(new Ulozenie(dlugosc_sztabki_cm, zasoby));//dodaje element [0,0,...,0]
+            lista.Add(new Arrangement(dlugosc_sztabki_cm, zasoby));//dodaje element [0,0,...,0]
             
             return lista;
         }
@@ -210,14 +210,14 @@ namespace bar_length_calculator
         private void WybierzWymaganeSztabki()
         {
             //List<Elementy> zasoby = new List<Elementy>(this.zasoby);
-            List<Ulozenie> ret = new List<Ulozenie>();
+            List<Arrangement> ret = new List<Arrangement>();
             Element temp = new Element();
             bool dodaj;
             int dodaj_ile = 0;
             int k = 0;
             while (k < wszystkie_uklady.Count)
             {
-                List<Element> uklad = wszystkie_uklady[k].OdczytajElement();
+                List<Element> uklad = wszystkie_uklady[k].GetLayout();
                 int i = 0;
                 dodaj = true;
 
@@ -240,8 +240,8 @@ namespace bar_length_calculator
                 else
                 {
                     ret.Add(wszystkie_uklady[k]);
-                    wszystkie_uklady[k].Sztabek = dodaj_ile;
-                    ret.Last<Ulozenie>().Sztabek = dodaj_ile;
+                    wszystkie_uklady[k].BarAmount = dodaj_ile;
+                    ret.Last<Arrangement>().BarAmount = dodaj_ile;
                     dodaj_ile = 0;
                     k++;
                 }
@@ -249,7 +249,7 @@ namespace bar_length_calculator
         }
 
 
-        public List<Ulozenie> WykonajObliczenia()
+        public List<Arrangement> WykonajObliczenia()
         {
             //Console.WriteLine("TEST");
             //Console.ReadKey();

@@ -38,7 +38,7 @@ namespace bar_length_calculator
         /// <summary>
         /// Wyliczone ułożenie elementów dla jednego profilu akurat dodawanego do rezultatu tekstowego w <see cref="WynikTB"/>. Prawdopodobnie powinna być zastąpiona bezpośrednim odczytem z obiektu Obliczenia. (legacy: ostateczny wynik)
         /// </summary>
-        private List<Ulozenie> wynik;
+        private List<Arrangement> wynik;
         /// <summary>
         /// Lista profili dodanych do edycji i możliwych do wybrania w <see cref="profilCB"/>.
         /// </summary>
@@ -326,20 +326,20 @@ namespace bar_length_calculator
                 t += "Algorytm zakończył działanie!\n\n";
                 foreach (var u in wynik)
                 {
-                    if (u.Sztabek > 0)
+                    if (u.BarAmount > 0)
                     {
-                        if (u.Sztabek > 4)
-                            t += u.Sztabek.ToString() + " sztabek o układzie elementów:\n";
-                        else if (u.Sztabek > 1)
-                            t += u.Sztabek.ToString() + " sztabki o układzie elementów:\n";
-                        else if (u.Sztabek == 1)
-                            t += u.Sztabek.ToString() + " sztabka o układzie elementów:\n";
+                        if (u.BarAmount > 4)
+                            t += u.BarAmount.ToString() + " sztabek o układzie elementów:\n";
+                        else if (u.BarAmount > 1)
+                            t += u.BarAmount.ToString() + " sztabki o układzie elementów:\n";
+                        else if (u.BarAmount == 1)
+                            t += u.BarAmount.ToString() + " sztabka o układzie elementów:\n";
                         else
-                            t += u.Sztabek.ToString() + " sztabek o układzie elementów:\n";
+                            t += u.BarAmount.ToString() + " sztabek o układzie elementów:\n";
 
                         t += u.ToString(ShowMode.Default);
-                        t += "Pozostałe resztki: " + u.Reszta().ToString() + " cm\n\n";
-                        sumaResztek += u.Reszta() * u.Sztabek;
+                        t += "Pozostałe resztki: " + u.Remnant().ToString() + " cm\n\n";
+                        sumaResztek += u.Remnant() * u.BarAmount;
 
                     }
                 }
@@ -350,12 +350,12 @@ namespace bar_length_calculator
             {
                 foreach (var u in wynik)
                 {
-                    if (u.Sztabek > 0)
+                    if (u.BarAmount > 0)
                     {
-                        t += u.Sztabek.ToString() + " x sztanga:\n";
+                        t += u.BarAmount.ToString() + " x sztanga:\n";
                         t += u.ToString(ShowMode.Short);
-                        t += "    Odpad: " + u.Reszta().ToString() + " cm\n";
-                        sumaResztek += u.Reszta() * u.Sztabek;
+                        t += "    Odpad: " + u.Remnant().ToString() + " cm\n";
+                        sumaResztek += u.Remnant() * u.BarAmount;
                     }
                 }
                 t += "Suma odpadów: " + sumaResztek + " cm";
