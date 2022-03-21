@@ -109,8 +109,8 @@
                     </DataGrid.Resources>
                     <DataGrid.Columns>
                         <!--<DataGridTextColumn Binding="{Binding id}" ClipboardContentBinding="{x:Null}" Header="L.p."  Width="30" IsReadOnly="true"/>-->
-                        <DataGridTextColumn Binding="{Binding DlugoscCm, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Długość elementu"  Width="110" />
-                        <DataGridTextColumn Binding="{Binding Ile, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}"  Header="Ilość elementów" Width="90" />
+                        <DataGridTextColumn Binding="{Binding Length, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}" Header="Długość elementu"  Width="110" />
+                        <DataGridTextColumn Binding="{Binding Quantity, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" ClipboardContentBinding="{x:Null}"  Header="Ilość elementów" Width="90" />
                     </DataGrid.Columns>
                 </DataGrid>
 

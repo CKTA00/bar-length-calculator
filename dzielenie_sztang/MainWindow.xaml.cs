@@ -268,19 +268,19 @@ namespace bar_length_calculator
                     return false;
                 }
 
-                if (dana.dlugosc_cm > profil.dlugosc_sztabki_cm)
+                if (dana.length > profil.dlugosc_sztabki_cm)
                 {
                     MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                         "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
-                if (dana.dlugosc_cm <= 0)
+                if (dana.length <= 0)
                 {
                     MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
-                if (dana.ile <= 0)
+                if (dana.quantity <= 0)
                 {
                     MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
@@ -485,15 +485,15 @@ namespace bar_length_calculator
                         }
                         else
                         {
-                            ElementyObiekt ell = new ElementyObiekt(probaFloat, probaInt);
+                            ElementObject ell = new ElementObject(probaFloat, probaInt);
 
                             if (!edytowany_profil.DodajZasob(ell))
                             {
 
-                                if (MessageBox.Show("Element o takiej długości już został dodany.\nCzy dodać wprowadzoną ilość (" + ell.ile + ") do istniejącej?",
+                                if (MessageBox.Show("Element o takiej długości już został dodany.\nCzy dodać wprowadzoną ilość (" + ell.quantity + ") do istniejącej?",
                                     "Powtarzające się dane", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
-                                    edytowany_profil.PowiekszZasob(ell.dlugosc_cm, ell.ile);
+                                    edytowany_profil.PowiekszZasob(ell.length, ell.quantity);
                                 }
                             }
                             tabelaElementow.Items.Refresh();
@@ -525,11 +525,11 @@ namespace bar_length_calculator
         private void UsunB_Click(object sender, RoutedEventArgs e)
         {
 
-            List<ElementyObiekt> lista = new List<ElementyObiekt>();
-            ElementyObiekt temp_e;
+            List<ElementObject> lista = new List<ElementObject>();
+            ElementObject temp_e;
             foreach (var item in tabelaElementow.SelectedCells)
             {
-                temp_e = (ElementyObiekt)item.Item;
+                temp_e = (ElementObject)item.Item;
                 lista.Add(temp_e);
 
                 //edytowany_profil.Zasoby.Remove(item.Item as ElementyObiekt); z jakiegoś powodu nie dizała poprawnie,

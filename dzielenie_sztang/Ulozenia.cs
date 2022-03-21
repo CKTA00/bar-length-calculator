@@ -16,120 +16,11 @@ namespace bar_length_calculator
         Old
     }
 
-    //struct Elementy
-    //{
-    //    //int id;
-    //    /// <summary>
-    //    /// Długość elementu w cm.
-    //    /// </summary>
-    //    public float dlugosc_cm;
-    //    /// <summary>
-    //    /// Ilosc elementów o tej długości.
-    //    /// </summary>
-    //    public int ile;
-    //    /// <summary>
-    //    /// Zmienna porządkowa; 0 - el. najwiekszy. Identyfikuje element
-    //    /// </summary>
-    //    //public byte p;
-    //}
-
-    struct Elementy : INotifyPropertyChanged
-    {
-        //int id;
-        /// <summary>
-        /// Długość elementu w cm.
-        /// </summary>
-        public float dlugosc_cm { get; set; }
-        /// <summary>
-        /// Ilosc elementów o tej długości.
-        /// </summary>
-        public int ile { get; set; }
-        /// <summary>
-        /// Zmienna porządkowa; 0 - el. najwiekszy. Identyfikuje element
-        /// </summary>
-        //public byte p;
-        public float DlugoscCm
-        {
-            get { return dlugosc_cm; }
-            set
-            {
-                dlugosc_cm = value;
-                NotifyPropertyChanged("DlugoscCm");
-            }
-        }
-
-        public int Ile
-        {
-            get { return ile; }
-            set
-            {
-                ile = value;
-                NotifyPropertyChanged("Ile");
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string propName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            
-        }
-    }
-
-    class ElementyObiekt : INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Długość elementu w cm.
-        /// </summary>
-        public float dlugosc_cm { get; set; }
-        /// <summary>
-        /// Ilosc elementów o tej długości.
-        /// </summary>
-        public int ile { get; set; }
-
-        public float DlugoscCm
-        {
-            get { return dlugosc_cm; }
-            set
-            {
-                dlugosc_cm = value;
-                NotifyPropertyChanged("DlugoscCm");
-            }
-        }
-
-        public int Ile
-        {
-            get { return ile; }
-            set
-            {
-                ile = value;
-                NotifyPropertyChanged("Ile");
-            }
-        }
-
-        public ElementyObiekt(float dlugosc=0,int ilosc=0)
-        {
-            DlugoscCm = dlugosc;
-            Ile = ilosc;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyPropertyChanged(string propName)
-        {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propName));
-
-        }
-    }
-
     class Ulozenie
     {
         public static int _ileKonstrukcji;
 
-        List<Elementy> uklad;
+        List<Element> uklad;
         private float reszta;
         public float Reszta() { return reszta; }
         private int ileSztabek = 0;
@@ -150,7 +41,7 @@ namespace bar_length_calculator
                 foreach (var el in uklad)
                 {
                     // el.dlugosc_cm + "cm x " +
-                    s += el.ile + ", ";
+                    s += el.quantity + ", ";
                 }
                 s += "r = " + reszta + "] x " + ileSztabek;
             }
@@ -158,23 +49,23 @@ namespace bar_length_calculator
             {
                 foreach (var e in uklad)
                 {
-                    if (e.ile > 0 || sm == ShowMode.All)
+                    if (e.quantity > 0 || sm == ShowMode.All)
                     {
-                        if(e.ile==1)
-                            s += "    " + e.ile + " element o długości ";
-                        else if(e.ile<5)
-                            s += "    " + e.ile + " elementy o długości ";
+                        if(e.quantity==1)
+                            s += "    " + e.quantity + " element o długości ";
+                        else if(e.quantity<5)
+                            s += "    " + e.quantity + " elementy o długości ";
                         else
-                            s += "    " + e.ile + " elementów o długości ";
+                            s += "    " + e.quantity + " elementów o długości ";
                     
-                        if (e.dlugosc_cm == Math.Floor(e.dlugosc_cm))
+                        if (e.length == Math.Floor(e.length))
                         {
-                            int temp = (int)e.dlugosc_cm;
+                            int temp = (int)e.length;
                             s += temp.ToString();
                         }
                         else
                         {
-                            s += e.dlugosc_cm.ToString();
+                            s += e.length.ToString();
                         }
                         s += " cm\n";
                     }
@@ -185,17 +76,17 @@ namespace bar_length_calculator
             {
                 foreach (var e in uklad)
                 {
-                    if (e.ile > 0 || sm == ShowMode.AllShort)
+                    if (e.quantity > 0 || sm == ShowMode.AllShort)
                     {
-                        s += "    " + e.ile + " x ";
-                        if (e.dlugosc_cm == Math.Floor(e.dlugosc_cm))
+                        s += "    " + e.quantity + " x ";
+                        if (e.length == Math.Floor(e.length))
                         {
-                            int temp = (int)e.dlugosc_cm;
+                            int temp = (int)e.length;
                             s += temp.ToString();
                         }
                         else
                         {
-                            s += e.dlugosc_cm.ToString();
+                            s += e.length.ToString();
                         }
                         s += " cm\n";
                     }
@@ -212,18 +103,18 @@ namespace bar_length_calculator
             return ToString(ShowMode.Old);
         }
 
-        public Ulozenie(float dlugosc_pelnej_sztabki, List<Elementy> profil_typow)
+        public Ulozenie(float dlugosc_pelnej_sztabki, List<Element> profil_typow)
         {
-            uklad = new List<Elementy>();
+            uklad = new List<Element>();
             uklad.AddRange(profil_typow);
 
             // przepisuje liste elementow z profilu_typow ale z iloscia 0
-            Elementy e = new Elementy();
-            e.ile = 0;
+            Element e = new Element();
+            e.quantity = 0;
             for (int i = 0; i < uklad.Count(); i++)
             {
                 //e.ile = 0 zawsze
-                e.dlugosc_cm = uklad[i].dlugosc_cm;
+                e.length = uklad[i].length;
                 uklad[i] = e;
             }
 
@@ -232,18 +123,18 @@ namespace bar_length_calculator
             _ileKonstrukcji++;
         }
 
-        public Ulozenie(float dlugosc_pelnej_sztabki, List<Elementy> profil_typow, float reszta)
+        public Ulozenie(float dlugosc_pelnej_sztabki, List<Element> profil_typow, float reszta)
         {
 
-            uklad = new List<Elementy>();
+            uklad = new List<Element>();
             uklad.AddRange(profil_typow);
 
             // przepisuje liste elementow ale z iloscia 1
-            Elementy e = new Elementy();
-            e.ile = 0;
+            Element e = new Element();
+            e.quantity = 0;
             for (int i = 0; i < uklad.Count(); i++)
             {
-                e.dlugosc_cm = uklad[i].dlugosc_cm;
+                e.length = uklad[i].length;
                 uklad[i] = e;
             }
 
@@ -256,13 +147,13 @@ namespace bar_length_calculator
             float s = 0;
             foreach (var el in uklad)
             {
-                s += el.ile * el.dlugosc_cm;
+                s += el.quantity * el.length;
             }
             reszta = dl_sztabki - s;
             return reszta;
         }
 
-        public List<Elementy> OdczytajElement()
+        public List<Element> OdczytajElement()
         {
             return uklad;
         }
@@ -274,12 +165,12 @@ namespace bar_length_calculator
         /// </summary>
         /// <param name="el">typ elementu</param>
         /// <returns>Prawde jeśli udało się odciąć, fałsz gdy jest to niemożliwe.</returns>
-        public bool SprobojOdciac(Elementy el)
+        public bool SprobojOdciac(Element el)
         {
-            if (reszta - el.dlugosc_cm > 0)
+            if (reszta - el.length > 0)
             {
-                ++el.ile;
-                reszta -= el.dlugosc_cm;
+                ++el.quantity;
+                reszta -= el.length;
                 return true;
             }
             else return false;
@@ -287,9 +178,9 @@ namespace bar_length_calculator
 
         public void DodajElement(int numer_elementu)
         {
-            Elementy e = new Elementy();
-            e.ile = uklad[numer_elementu].ile + 1;
-            e.dlugosc_cm = uklad[numer_elementu].dlugosc_cm;
+            Element e = new Element();
+            e.quantity = uklad[numer_elementu].quantity + 1;
+            e.length = uklad[numer_elementu].length;
             uklad[numer_elementu] = e;
         }
     }

@@ -24,8 +24,8 @@ namespace bar_length_calculator
         /// <summary>
         /// lista wszystkich zasobów (rodzaju elementów i ich ilości) dodanych przez użytkownika
         /// </summary>
-        public List<Elementy> zasoby;
-        public ObservableCollection<ElementyObiekt> Zasoby { get; set; }
+        public List<Element> zasoby;
+        public ObservableCollection<ElementObject> Zasoby { get; set; }
         
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace bar_length_calculator
             Console.Write("[");
             foreach (var e in zasoby)
             {
-                Console.Write(e.dlugosc_cm + "cm, ");
+                Console.Write(e.length + "cm, ");
             }
             Console.WriteLine(" reszta]");
             foreach (var u in wszystkie_uklady)
@@ -53,7 +53,7 @@ namespace bar_length_calculator
         {
             foreach (var z in zasoby)
             {
-                Console.WriteLine("element dlugosci " + z.dlugosc_cm + " razy " + z.ile);
+                Console.WriteLine("element dlugosci " + z.length + " razy " + z.quantity);
             }
         }
 
@@ -67,8 +67,8 @@ namespace bar_length_calculator
         public Obliczenia(string profil)
         {
             //ile_typow = 0;
-            zasoby = new List<Elementy>();
-            Zasoby = new ObservableCollection<ElementyObiekt>();
+            zasoby = new List<Element>();
+            Zasoby = new ObservableCollection<ElementObject>();
             wszystkie_uklady = new List<Ulozenie>();
             this.profil = new BarProfile(profil);
         }
@@ -76,8 +76,8 @@ namespace bar_length_calculator
         public Obliczenia(BarProfile profil)
         {
             //ile_typow = 0;
-            zasoby = new List<Elementy>();
-            Zasoby = new ObservableCollection<ElementyObiekt>();
+            zasoby = new List<Element>();
+            Zasoby = new ObservableCollection<ElementObject>();
             wszystkie_uklady = new List<Ulozenie>();
             this.profil = profil;
         }
@@ -87,11 +87,11 @@ namespace bar_length_calculator
         /// </summary>
         /// <param name="e">Element do dodania</param>
         /// <returns>Czy element został dodany?</returns>
-        public bool DodajZasob(ElementyObiekt e)
+        public bool DodajZasob(ElementObject e)
         {
             foreach (var z in Zasoby)
             {
-                if (z.dlugosc_cm == e.dlugosc_cm) return false; //element juz istnieje na tej liscie!
+                if (z.length == e.length) return false; //element juz istnieje na tej liscie!
             }
             Zasoby.Add(e);
             return true;
@@ -106,10 +106,10 @@ namespace bar_length_calculator
         {
             for(int i = 0; i<Zasoby.Count; i++)
             {
-                if (Zasoby[i].dlugosc_cm == oDlugosci)
+                if (Zasoby[i].length == oDlugosci)
                 {
                     //el.ile += oTyle;
-                    ElementyObiekt newEl = new ElementyObiekt(Zasoby[i].dlugosc_cm, Zasoby[i].ile + oTyle);
+                    ElementObject newEl = new ElementObject(Zasoby[i].length, Zasoby[i].quantity + oTyle);
                     Zasoby[i] = newEl;
                     return;
                 }
@@ -125,11 +125,11 @@ namespace bar_length_calculator
         void KonwertujZasoby()
         {
             zasoby.Clear();
-            Elementy el = new Elementy();
+            Element el = new Element();
             foreach (var zas in Zasoby)
             {
-                el.dlugosc_cm = zas.dlugosc_cm;
-                el.ile = zas.ile;
+                el.length = zas.length;
+                el.quantity = zas.quantity;
                 zasoby.Add(el);
             }
         }
@@ -140,14 +140,14 @@ namespace bar_length_calculator
         private void SortujTypyElementow()
         {
             // bubble sort
-            Elementy e;
+            Element e;
             int ile_z = zasoby.Count();
             ile_z--;
             for (int p = 0; p < ile_z; p++)
             {
                 for (int i = 0; i < ile_z; i++)
                 {
-                    if (zasoby[i].dlugosc_cm < zasoby[i + 1].dlugosc_cm)
+                    if (zasoby[i].length < zasoby[i + 1].length)
                     {
                         e = zasoby[i];
                         zasoby[i] = zasoby[i + 1];
@@ -176,24 +176,24 @@ namespace bar_length_calculator
             float roz;
             for (int i = 0; i < zasoby.Count; ++i)// i to numer zasobu
             {
-                if (zasoby[i].dlugosc_cm <= max_dl_elementu)
+                if (zasoby[i].length <= max_dl_elementu)
                 {
-                    roz = dl_sztabeczki - zasoby[i].dlugosc_cm;
-                    if (roz >= 0 && zasoby[i].ile > 0)
+                    roz = dl_sztabeczki - zasoby[i].length;
+                    if (roz >= 0 && zasoby[i].quantity > 0)
                     {
-                        Elementy e = zasoby[i];
-                        --e.ile;
+                        Element e = zasoby[i];
+                        --e.quantity;
                         zasoby[i] = e;
 
                         List<Ulozenie> l = new List<Ulozenie>();
-                        l = WyznaczPodulozenie(roz, zasoby[i].dlugosc_cm);
+                        l = WyznaczPodulozenie(roz, zasoby[i].length);
 
                         foreach (var u in l)
                         {
                             u.DodajElement(i);//dodaje element o numerze zasobu i
                         }
                         lista.AddRange(l);
-                        ++e.ile;
+                        ++e.quantity;
                         zasoby[i] = e;
                     }
                 }//else nic nie rób   
@@ -211,17 +211,17 @@ namespace bar_length_calculator
         {
             //List<Elementy> zasoby = new List<Elementy>(this.zasoby);
             List<Ulozenie> ret = new List<Ulozenie>();
-            Elementy temp = new Elementy();
+            Element temp = new Element();
             bool dodaj;
             int dodaj_ile = 0;
             int k = 0;
             while (k < wszystkie_uklady.Count)
             {
-                List<Elementy> uklad = wszystkie_uklady[k].OdczytajElement();
+                List<Element> uklad = wszystkie_uklady[k].OdczytajElement();
                 int i = 0;
                 dodaj = true;
 
-                for (; i < zasoby.Count; i++) if (uklad[i].ile > zasoby[i].ile) dodaj = false;
+                for (; i < zasoby.Count; i++) if (uklad[i].quantity > zasoby[i].quantity) dodaj = false;
                 // jesli choc o jeden element za duzo ustaw na false
 
                 if (dodaj)
@@ -230,7 +230,7 @@ namespace bar_length_calculator
                     for (; i < zasoby.Count; i++)
                     {
                         temp = zasoby[i];
-                        temp.ile -= uklad[i].ile;
+                        temp.quantity -= uklad[i].quantity;
                         zasoby[i] = temp;
                     }
 

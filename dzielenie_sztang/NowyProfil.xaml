@@ -25,7 +25,7 @@
             <ComboBox Name="ProfilZListyCBX" Margin="20,3,20,3" Width="200" HorizontalAlignment="Left" IsEnabled="{Binding Path=IsChecked, ElementName=ZLlistyRB}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=nazwa_profilu}"/>
+                        <TextBlock Text="{Binding Path=profileName}"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
