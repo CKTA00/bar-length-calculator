@@ -82,7 +82,7 @@
     </Compile>
     <Compile Include="BarProfile.cs" />
     <Compile Include="ShowMode.cs" />
-    <Compile Include="Ulozenia.cs" />
+    <Compile Include="Arrangement.cs" />
     <Compile Include="Walidacja.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
