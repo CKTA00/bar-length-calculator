@@ -19,15 +19,24 @@ namespace bar_length_calculator
         /// </summary>
         public float mainBarLength { get; set; }
 
+        /// <summary>
+        /// BarProfile associated with resources
+        /// </summary>
         public BarProfile profile { get; set; }
 
         /// <summary>
-        /// lista wszystkich zasobów (rodzaju elementów i ich ilości) dodanych przez użytkownika
+        /// List of all elements with their amounts added by the user.
+        /// Lista wszystkich zasobów (rodzaju elementów i ich ilości) dodanych przez użytkownika.
         /// </summary>
         public List<Element> resources;
+
+        /// <summary>
+        /// List of all elements with their amounts added by the user, that is updated by the UI.
+        /// </summary>
         public ObservableCollection<ElementObject> Resources { get; set; }
         
         /// <summary>
+        /// List of all arrangements that will be calculated by this object.
         /// Tutaj wgrane i przechowane zostaną wszystkie rodzaje ułożeń elementów na sztabce
         /// </summary>
         private List<Arrangement> allArrangements;
@@ -51,10 +60,11 @@ namespace bar_length_calculator
         }
 
         /// <summary>
+        /// Adds kind of element and returns true if one hadn't existed yet. Do not add if given kind already had existed.
         /// Dodaje rodzaj elementu i zwraca prawde, jesli el. o tej dlugosci jeszcze nie istnieje. Zwraca fałsz i nie dodaje jeśli istniał.
         /// </summary>
-        /// <param name="e">Element do dodania</param>
-        /// <returns>Czy element został dodany?</returns>
+        /// <param name="e">Element witch kind will be added</param>
+        /// <returns>True on success</returns>
         public bool AddResource(ElementObject e)
         {
             foreach (var z in Resources)
@@ -66,10 +76,11 @@ namespace bar_length_calculator
         }
 
         /// <summary>
+        /// Adds amount to existing kind defined by length
         /// Dodaje elementy o tej samej długości do siebie.
         /// </summary>
-        /// <param name="resorceLength">Wyszukaj element o tej długości...</param>
-        /// <param name="increaseAmount">...i powiększ ich ilosć o tą wartość.</param>
+        /// <param name="resorceLength">Find element with maching length</param>
+        /// <param name="increaseAmount">Increase by this value</param>
         public void IncreaseExistingResource(float resorceLength, int increaseAmount)
         {
             for (int i = 0; i < Resources.Count; i++)
@@ -86,12 +97,17 @@ namespace bar_length_calculator
                 , "Dziwny błąd. Powiedz koniecznie Przemkowi!", MessageBoxButton.OK, MessageBoxImage.Error);
             return;
         }
+
+        /// <summary>
+        /// Run all functions necessary to perform calculations, which results will be returned
+        /// </summary>
+        /// <returns>Result of calculations</returns>
         public List<Arrangement> RunCalculations()
         {
             ConvertResources();
             SortElementByLength();
             CalculateAllPossibleArrangements();
-            WybierzWymaganeSztabki();
+            SelectRequiredBars();
             return allArrangements;
         }
 
@@ -140,6 +156,7 @@ namespace bar_length_calculator
         }
 
         /// <summary>
+        /// Sorts elements of resources list with custom algorithm.
         /// Sortuje elementy w liscie zasoby.
         /// </summary>
         private void SortElementByLength()
@@ -164,6 +181,7 @@ namespace bar_length_calculator
         }
 
         /// <summary>
+        /// Calculates all possible arrangements with proper waste calculated.
         /// Wyznacza wszystkie możliwe ułożenia wraz z resztami
         /// </summary>
         private void CalculateAllPossibleArrangements()
@@ -210,14 +228,15 @@ namespace bar_length_calculator
         }
 
         /// <summary>
+        /// Calculates which bars in what amount are needed to cover resources.
         /// Wylicza ile potrzeba jakich sztabek (Ułożeń) aby pokryć zasoby.
         /// </summary>
-        private void WybierzWymaganeSztabki()
+        private void SelectRequiredBars()
         {
             List<Arrangement> ret = new List<Arrangement>();
             Element temp = new Element();
             bool shouldAdd;
-            int amounToAdd = 0;
+            int toAdd = 0;
             int k = 0;
             while (k < allArrangements.Count)
             {
@@ -239,14 +258,14 @@ namespace bar_length_calculator
                     }
 
                     shouldAdd = false;
-                    amounToAdd++;
+                    toAdd++;
                 }
                 else
                 {
                     ret.Add(allArrangements[k]);
-                    allArrangements[k].BarAmount = amounToAdd;
-                    ret.Last<Arrangement>().BarAmount = amounToAdd;
-                    amounToAdd = 0;
+                    allArrangements[k].BarAmount = toAdd;
+                    ret.Last<Arrangement>().BarAmount = toAdd;
+                    toAdd = 0;
                     k++;
                 }
             }

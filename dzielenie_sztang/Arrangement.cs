@@ -170,8 +170,8 @@ namespace bar_length_calculator
         }
 
         /// <summary>
-        /// Sprawdza czy podany element da się odciąć od pozostałej sztabki. Jeśli tak to odcina, w przeciwnym razie sztabka zostaje nienaruszona
         /// Checks if it is possible to cut the element from ramaining bar. If yes, cuts the element form bar.
+        /// Sprawdza czy podany element da się odciąć od pozostałej sztabki. Jeśli tak to odcina, w przeciwnym razie sztabka zostaje nienaruszona
         /// </summary>
         /// <param name="el">type of element</param>
         /// <returns>True if cutting was successful, False if cutting is impossible.</returns>
