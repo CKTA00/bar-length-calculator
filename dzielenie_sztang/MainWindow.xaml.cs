@@ -42,17 +42,17 @@ namespace bar_length_calculator
         /// <summary>
         /// Lista profili dodanych do edycji i możliwych do wybrania w <see cref="profilCB"/>.
         /// </summary>
-        private List<Obliczenia> profile;
+        private List<Calculations> profile;
         /// <summary>
         /// Aktualnie wybrany profil z <see cref="profilCB"/>.
         /// </summary>
-        private Obliczenia edytowany_profil { get; set; }
+        private Calculations edytowany_profil { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
             tabelaElementow.AutoGenerateColumns = false;
-            profile = new List<Obliczenia>();
+            profile = new List<Calculations>();
             profilCB.ItemsSource = profile;
             BlokadaEdycji();
             PasekInformacji.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + wersja;
@@ -81,15 +81,15 @@ namespace bar_length_calculator
         /// Aktualizuje źródła danych i GUI na nowy profil.
         /// </summary>
         /// <param name="zaznaczony_profil">Nowy profil (NIE NULL-ODPORNE!)</param>
-        private void ZmianaProfilu(Obliczenia zaznaczony_profil)
+        private void ZmianaProfilu(Calculations zaznaczony_profil)
         {
             profilCB.SelectedItem = zaznaczony_profil;
             edytowany_profil = zaznaczony_profil;
             PasekInformacji.Text = "Edytujesz: " + edytowany_profil.ToString();
-            tabelaElementow.ItemsSource = edytowany_profil.Zasoby;
+            tabelaElementow.ItemsSource = edytowany_profil.Resources;
             tabelaElementow.Items.Refresh();
 
-            dlugoscSztabki = edytowany_profil.dlugosc_sztabki_cm;
+            dlugoscSztabki = edytowany_profil.mainBarLength;
             if (dlugoscSztabki != 0) sztabkaTB.Text = dlugoscSztabki.ToString();
             else sztabkaTB.Text = "";
             UstawSztabke();
@@ -118,7 +118,7 @@ namespace bar_length_calculator
                     sztabkaTB.BorderBrush = Brushes.Red;
                     sztabkaTB.Background = Brushes.LightPink;
                 }
-                edytowany_profil.dlugosc_sztabki_cm = temp_dlugoscSztabki;
+                edytowany_profil.mainBarLength = temp_dlugoscSztabki;
             }
             SprawdzDlugoscElementu();
             PasekInformacji.Text = "Edytujesz: " + edytowany_profil.ToString();
@@ -151,7 +151,7 @@ namespace bar_length_calculator
                     DlugoscTB.Background = Brushes.LightPink;
                     DlugoscTB.ToolTip = "Długość musi być dodatnia.";
                 }
-                else if(test>edytowany_profil.dlugosc_sztabki_cm && edytowany_profil.dlugosc_sztabki_cm!=0)
+                else if(test>edytowany_profil.mainBarLength && edytowany_profil.mainBarLength!=0)
                 {
 
                     DlugoscTB.Foreground = Brushes.DarkRed;
@@ -255,34 +255,34 @@ namespace bar_length_calculator
         /// <param name="profil">Na jakim profilu ma wykonać.</param>
         /// <param name="kontynuuj">Czy będzie wiele profilów do wyświetlenia.</param>
         /// <returns></returns>
-        private bool ObliczProfil(Obliczenia profil, bool kontynuuj)
+        private bool ObliczProfil(Calculations profil, bool kontynuuj)
         {
 
-            foreach (var dana in profil.Zasoby)
+            foreach (var dana in profil.Resources)
             {
                 string errorMessage;
-                if (!WprowadzonoPoprawnieSztabke(profil.dlugosc_sztabki_cm, out errorMessage))
+                if (!WprowadzonoPoprawnieSztabke(profil.mainBarLength, out errorMessage))
                 {
-                    errorMessage += "\nBłąd wystąpił w profilu " + profil.profil.profileName + ".\nSprawdź pole zaznaczone na czerwono.";
+                    errorMessage += "\nBłąd wystąpił w profilu " + profil.profile.profileName + ".\nSprawdź pole zaznaczone na czerwono.";
                     MessageBox.Show(errorMessage, "Błędne dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
 
-                if (dana.length > profil.dlugosc_sztabki_cm)
+                if (dana.length > profil.mainBarLength)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profil.profileName,
+                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profile.profileName,
                         "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
                 if (dana.length <= 0)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
+                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profile.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
                 if (dana.quantity <= 0)
                 {
-                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profil.profileName,
+                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profile.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
@@ -296,7 +296,7 @@ namespace bar_length_calculator
                 //worker.ProgressChanged += worker_ProgressChanged;
                 //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
                 //worker.RunWorkerAsync(profil);
-                wynik = profil.WykonajObliczenia();
+                wynik = profil.RunCalculations();
             }
             catch
             {
@@ -307,8 +307,8 @@ namespace bar_length_calculator
 
             if (!kontynuuj)
                 WynikTB.Clear();
-            if(profil.profil.presentationName!="")
-                WynikTB.Text += "PROFIL " + profil.profil.presentationName + ":\n";
+            if(profil.profile.presentationName!="")
+                WynikTB.Text += "PROFIL " + profil.profile.presentationName + ":\n";
             WynikTB.Text+=WyswietlWyniki();
             return true;
         }
@@ -372,7 +372,7 @@ namespace bar_length_calculator
         private void ProfilCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (profilCB.SelectedItem != null)
-                ZmianaProfilu(profilCB.SelectedItem as Obliczenia);
+                ZmianaProfilu(profilCB.SelectedItem as Calculations);
             else
                 PasekInformacji.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + wersja;
         }
@@ -387,7 +387,7 @@ namespace bar_length_calculator
             NowyProfil okienko = new NowyProfil();
             if (okienko.ShowDialog() == true)
             {
-                Obliczenia nowyProfil = new Obliczenia(okienko.WybranyProfil);
+                Calculations nowyProfil = new Calculations(okienko.WybranyProfil);
 
                 profile.Add(nowyProfil);
                 ZmianaProfilu(nowyProfil);
@@ -407,7 +407,7 @@ namespace bar_length_calculator
                     profilCB.SelectedItem = null;
                     profile.Clear();
                     BlokadaEdycji();
-                    edytowany_profil.Zasoby.Clear();
+                    edytowany_profil.Resources.Clear();
                 }
                 else
                 {
@@ -428,7 +428,7 @@ namespace bar_length_calculator
             {
                 WynikTB.Text = "";
                 foreach (var p in profile)
-                    if (p.Zasoby.Count > 0)
+                    if (p.Resources.Count > 0)
                     {
                         
                         ObliczProfil(p, true);
@@ -468,7 +468,7 @@ namespace bar_length_calculator
                         DlugoscTB.Focus();
                         return;
                     }
-                    else if(probaFloat>edytowany_profil.dlugosc_sztabki_cm && edytowany_profil.dlugosc_sztabki_cm!=0)
+                    else if(probaFloat>edytowany_profil.mainBarLength && edytowany_profil.mainBarLength!=0)
                     {
                         MessageBox.Show("Długości elementu nie może być większa od długości sztabki.", "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                         DlugoscTB.Focus();
@@ -487,13 +487,13 @@ namespace bar_length_calculator
                         {
                             ElementObject ell = new ElementObject(probaFloat, probaInt);
 
-                            if (!edytowany_profil.DodajZasob(ell))
+                            if (!edytowany_profil.AddResource(ell))
                             {
 
                                 if (MessageBox.Show("Element o takiej długości już został dodany.\nCzy dodać wprowadzoną ilość (" + ell.quantity + ") do istniejącej?",
                                     "Powtarzające się dane", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
-                                    edytowany_profil.PowiekszZasob(ell.length, ell.quantity);
+                                    edytowany_profil.IncreaseExistingResource(ell.length, ell.quantity);
                                 }
                             }
                             tabelaElementow.Items.Refresh();
@@ -537,14 +537,14 @@ namespace bar_length_calculator
             }
             foreach (var item in lista)
             {
-                edytowany_profil.Zasoby.Remove(item);
+                edytowany_profil.Resources.Remove(item);
             }
             tabelaElementow.Items.Refresh();
         }
 
         private void Wyczysc_Click(object sender, RoutedEventArgs e)
         {
-            edytowany_profil.Zasoby.Clear();
+            edytowany_profil.Resources.Clear();
 
             tabelaElementow.Items.Refresh();
         }
