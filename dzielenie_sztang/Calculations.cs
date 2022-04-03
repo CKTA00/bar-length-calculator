@@ -6,8 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.ComponentModel;
-//using System.Windows.Data;
 
 namespace bar_length_calculator
 {

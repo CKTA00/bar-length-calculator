@@ -77,13 +77,13 @@
     </ApplicationDefinition>
     <Compile Include="Element.cs" />
     <Compile Include="ElementObject.cs" />
-    <Compile Include="NowyProfil.xaml.cs">
-      <DependentUpon>NowyProfil.xaml</DependentUpon>
+    <Compile Include="NewProfileWindow.xaml.cs">
+      <DependentUpon>NewProfileWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="BarProfile.cs" />
     <Compile Include="ShowMode.cs" />
     <Compile Include="Arrangement.cs" />
-    <Compile Include="Walidacja.cs" />
+    <Compile Include="ValidatePositiveFloat.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -96,13 +96,13 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NowyProfil.xaml">
+    <Page Include="NewProfileWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Obliczenia.cs" />
+    <Compile Include="Calculations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

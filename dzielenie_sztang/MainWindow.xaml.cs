@@ -384,10 +384,10 @@ namespace bar_length_calculator
 
         private void NowyProfilB_Click(object sender, RoutedEventArgs e)
         {
-            NowyProfil okienko = new NowyProfil();
+            NewProfileWindow okienko = new NewProfileWindow();
             if (okienko.ShowDialog() == true)
             {
-                Calculations nowyProfil = new Calculations(okienko.WybranyProfil);
+                Calculations nowyProfil = new Calculations(okienko.SelectedProfile);
 
                 profile.Add(nowyProfil);
                 ZmianaProfilu(nowyProfil);
