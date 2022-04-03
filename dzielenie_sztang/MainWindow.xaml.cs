@@ -26,105 +26,105 @@ namespace bar_length_calculator
     /// </summary>
     public partial class MainWindow : Window
     {
-        static string wersja = "2.1";
+        static string version = "2.1";
         /// <summary>
-        /// Długość sztabki obecnie wybranego profilu. Zastępuje Binding ponieważ jest to jedna z pierwszych zmiennych, które wprowadziłem, zanim zrozumiałem Binding. (bruh)
+        /// Length of currently selected bar.
         /// </summary>
-        private float dlugoscSztabki = 0;
+        private float barLength = 0;
         /// <summary>
-        /// Czy użytkownik wybrał opcje dodawania podobnych danych elementów?
+        /// Does adding of same length bars option is selected by user?
         /// </summary>
-        private bool zdecydowalZeDodaje = false;
+        private bool userDecidedToAdd = false;
         /// <summary>
-        /// Wyliczone ułożenie elementów dla jednego profilu akurat dodawanego do rezultatu tekstowego w <see cref="WynikTB"/>. Prawdopodobnie powinna być zastąpiona bezpośrednim odczytem z obiektu Obliczenia. (legacy: ostateczny wynik)
+        /// Results of calculations of one currently selected profile that will be printed in <see cref="ResultTB"/>.
         /// </summary>
-        private List<Arrangement> wynik;
+        private List<Arrangement> result;  //TODO: Replace with direct read from Calculations object or proxy if needed
         /// <summary>
-        /// Lista profili dodanych do edycji i możliwych do wybrania w <see cref="profilCB"/>.
+        /// List of added profiles, that can be manipulated in <see cref="ProfileCB"/>
         /// </summary>
-        private List<Calculations> profile;
+        private List<Calculations> profiles;
         /// <summary>
-        /// Aktualnie wybrany profil z <see cref="profilCB"/>.
+        /// Currently selected profile from <see cref="ProfileCB"/>.
         /// </summary>
-        private Calculations edytowany_profil { get; set; }
+        private Calculations currentProfile { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
-            tabelaElementow.AutoGenerateColumns = false;
-            profile = new List<Calculations>();
-            profilCB.ItemsSource = profile;
-            BlokadaEdycji();
-            PasekInformacji.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + wersja;
+            ElementsTable.AutoGenerateColumns = false;
+            profiles = new List<Calculations>();
+            ProfileCB.ItemsSource = profiles;
+            BlockModification();
+            BottomStrip.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + version;
         }
 
         /// <summary>
-        /// Blokuje (Odblokowuje gdy true) elementy GUI, które powinny być wyłączone gdy nie ma żadnych profili. 
+        /// Blocks (or unblocks when param true) GUI elements, which should be disabled when there is no profiles.
         /// </summary>
-        /// <param name="odblokuj"> true == odblokuj, false(domyślnie) == zablokuj</param>
-        private void BlokadaEdycji(bool odblokuj = false)
+        /// <param name="unlock"> true == unlock, false(default) == block</param>
+        private void BlockModification(bool unlock = false)
         {
-            MiniPanelProfil.IsEnabled = odblokuj;
-            MiniPanelSztabka.IsEnabled = odblokuj;
-            UsunProfilB.IsEnabled = odblokuj;
-            ObliczB.IsEnabled = odblokuj;
-            PanelDodawaniaElementu.IsEnabled = odblokuj;
-            PanelPrzyciskowElementu.IsEnabled = odblokuj;
-            tabelaElementow.IsEnabled = odblokuj;
-            if (!odblokuj)
+            MiniProfilePanel.IsEnabled = unlock;
+            MiniBarPanel.IsEnabled = unlock;
+            DeleteProfileB.IsEnabled = unlock;
+            CalculateB.IsEnabled = unlock;
+            AddElemenPanel.IsEnabled = unlock;
+            ElementToolsPanel.IsEnabled = unlock;
+            ElementsTable.IsEnabled = unlock;
+            if (!unlock)
             {
-                sztabkaTB.Text = "";
+                barTB.Text = "";
             }
         }
 
         /// <summary>
-        /// Aktualizuje źródła danych i GUI na nowy profil.
+        /// Updates sources of data and UI to new profile
         /// </summary>
-        /// <param name="zaznaczony_profil">Nowy profil (NIE NULL-ODPORNE!)</param>
-        private void ZmianaProfilu(Calculations zaznaczony_profil)
+        /// <param name="selectedProfile">New profile (cannot be NULL!)</param>
+        private void ChangeProfile(Calculations selectedProfile)
         {
-            profilCB.SelectedItem = zaznaczony_profil;
-            edytowany_profil = zaznaczony_profil;
-            PasekInformacji.Text = "Edytujesz: " + edytowany_profil.ToString();
-            tabelaElementow.ItemsSource = edytowany_profil.Resources;
-            tabelaElementow.Items.Refresh();
+            ProfileCB.SelectedItem = selectedProfile;
+            currentProfile = selectedProfile;
+            BottomStrip.Text = "Edytujesz: " + currentProfile.ToString();
+            ElementsTable.ItemsSource = currentProfile.Resources;
+            ElementsTable.Items.Refresh();
 
-            dlugoscSztabki = edytowany_profil.mainBarLength;
-            if (dlugoscSztabki != 0) sztabkaTB.Text = dlugoscSztabki.ToString();
-            else sztabkaTB.Text = "";
-            UstawSztabke();
+            barLength = currentProfile.mainBarLength;
+            if (barLength != 0) barTB.Text = barLength.ToString();
+            else barTB.Text = "";
+            ValidateBar();
         }
         
         /// <summary>
-        /// Obsługuje sprawdzanie poprawności długości sztabki i wyświetlenie komunikatu o błędzie.
+        /// Validates length of bar. Can display error messages.
         /// </summary>
-        private void UstawSztabke()
+        private void ValidateBar()
         {
-            if (edytowany_profil != null)
+            if (currentProfile != null)
             {
                 string errorMessage;
-                float temp_dlugoscSztabki = 0;
-                if (WprowadzonoPoprawnieSztabke(sztabkaTB.Text, out temp_dlugoscSztabki, out errorMessage))
+                float tempLength = 0;
+                if (ValidateAndCheckUserInput(barTB.Text, out tempLength, out errorMessage))
                 {
-                    MiniPanelSztabka.ToolTip = "Długość całej sztabki";
-                    sztabkaTB.Foreground = Brushes.Black;
-                    sztabkaTB.ClearValue(BorderBrushProperty);
-                    sztabkaTB.ClearValue(BackgroundProperty);
+                    MiniBarPanel.ToolTip = "Długość całej sztabki"; // TODO: make language dependent
+                    barTB.Foreground = Brushes.Black;
+                    barTB.ClearValue(BorderBrushProperty);
+                    barTB.ClearValue(BackgroundProperty);
                 }
                 else
                 {
-                    MiniPanelSztabka.ToolTip = errorMessage;
-                    sztabkaTB.Foreground = Brushes.DarkRed;
-                    sztabkaTB.BorderBrush = Brushes.Red;
-                    sztabkaTB.Background = Brushes.LightPink;
+                    MiniBarPanel.ToolTip = errorMessage;
+                    barTB.Foreground = Brushes.DarkRed;
+                    barTB.BorderBrush = Brushes.Red;
+                    barTB.Background = Brushes.LightPink;
                 }
-                edytowany_profil.mainBarLength = temp_dlugoscSztabki;
+                currentProfile.mainBarLength = tempLength;
             }
-            SprawdzDlugoscElementu();
-            PasekInformacji.Text = "Edytujesz: " + edytowany_profil.ToString();
+            ValidateElementsLength();
+            BottomStrip.Text = "Edytujesz: " + currentProfile.ToString();  // TODO: make language dependent
         }
 
-        private void SprawdzDlugoscElementu()
+        private void ValidateElementsLength()
         {
             float test;
             if (String.IsNullOrWhiteSpace(DlugoscTB.Text))
@@ -132,7 +132,7 @@ namespace bar_length_calculator
                 DlugoscTB.ClearValue(ForegroundProperty);
                 DlugoscTB.ClearValue(BorderBrushProperty);
                 DlugoscTB.ClearValue(BackgroundProperty);
-                DlugoscTB.ToolTip = "Długość elementu wyrażona w centymetrach.";
+                DlugoscTB.ToolTip = "Długość elementu wyrażona w centymetrach.";  // TODO: make language dependent
                 return;
             }
             if (!float.TryParse(DlugoscTB.Text,out test))
@@ -140,7 +140,7 @@ namespace bar_length_calculator
                 DlugoscTB.Foreground = Brushes.DarkRed;
                 DlugoscTB.BorderBrush = Brushes.Red;
                 DlugoscTB.Background = Brushes.LightPink;
-                DlugoscTB.ToolTip = "Wprowadź poprawną liczbę.";
+                DlugoscTB.ToolTip = "Wprowadź poprawną liczbę.";  // TODO: make language dependent
             }
             else
             {
@@ -149,182 +149,168 @@ namespace bar_length_calculator
                     DlugoscTB.Foreground = Brushes.DarkRed;
                     DlugoscTB.BorderBrush = Brushes.Red;
                     DlugoscTB.Background = Brushes.LightPink;
-                    DlugoscTB.ToolTip = "Długość musi być dodatnia.";
+                    DlugoscTB.ToolTip = "Długość musi być dodatnia."; // TODO: make language dependent
                 }
-                else if(test>edytowany_profil.mainBarLength && edytowany_profil.mainBarLength!=0)
+                else if(test>currentProfile.mainBarLength && currentProfile.mainBarLength!=0)
                 {
 
                     DlugoscTB.Foreground = Brushes.DarkRed;
                     DlugoscTB.BorderBrush = Brushes.Red;
                     DlugoscTB.Background = Brushes.LightPink;
-                    DlugoscTB.ToolTip = "Długość elementu nie może być większa od długośći sztabki.";
+                    DlugoscTB.ToolTip = "Długość elementu nie może być większa od długośći sztabki."; // TODO: make language dependent
                 }
                 else
                 {
                     DlugoscTB.ClearValue(ForegroundProperty);
                     DlugoscTB.ClearValue(BorderBrushProperty);
                     DlugoscTB.ClearValue(BackgroundProperty);
-                    DlugoscTB.ToolTip = "Długość elementu wyrażona w centymetrach.";
+                    DlugoscTB.ToolTip = "Długość elementu wyrażona w centymetrach."; // TODO: make language dependent
                 }
             }
         }
 
         /// <summary>
-        /// Konwertuje string text na float dlugosc_sztabki. Kiedy natrafi na błąd zwraca false, a jego treść znajdzie się w string rezultat.
+        /// Parses string text to float barLength. Returns false in case of error, writes error message to msg.
         /// </summary>
-        /// <param name="text">String do próby przekonwertowania na poprawną długość sztabki.</param>
-        /// <param name="dlugosc_sztabki">Zwracana długość sztabki.</param>
-        /// <param name="rezultat">Komunikat błędu (user-friendly).</param>
+        /// <param name="text">Parsed string.</param>
+        /// <param name="barLength">Parsing result bar length.</param>
+        /// <param name="msg">User-friendly error message.</param>
         /// <returns></returns>
-        private bool WprowadzonoPoprawnieSztabke(string text, out float dlugosc_sztabki, out string rezultat)
+        private bool ValidateAndCheckUserInput(string text, out float barLength, out string msg)
         {
-            if (float.TryParse(text, out dlugosc_sztabki))
+            if (float.TryParse(text, out barLength))
             {
-                if (dlugosc_sztabki <= 0)
+                if (barLength <= 0)
                 {
-                    rezultat = "Długość sztabki musi być dodatnia.";
-                    dlugosc_sztabki = 0;
+                    msg = "Długość sztabki musi być dodatnia."; // TODO: make language dependent
+                    barLength = 0;
                     return false;
                 }
             }
-            else if (sztabkaTB.Text != "")
+            else if (barTB.Text != "")
             {
-                rezultat = "Pole długości sztabki może składać się wyłącznie z cyfr i znkau \",\"";
-                dlugoscSztabki = 0;
+                msg = "Pole długości sztabki może składać się wyłącznie z cyfr i znkau \",\""; // TODO: make language dependent
+                this.barLength = 0;
                 return false;
             }
             else
             {
-                rezultat = "Wprowadź długość sztabki!";
-                dlugoscSztabki = 0;
+                msg = "Wprowadź długość sztabki!"; // TODO: make language dependent
+                this.barLength = 0;
                 return false;
             }
 
-            rezultat = text;
+            msg = text;
             return true;
         }
 
         /// <summary>
-        /// Sprawdza czy jest problem z konwersją textu na poprawną długość sztabki. Gdy błąd, zwraca false oraz treść błędu w string rezultat.
+        /// Returns false in case of error, writes error message to msg.
         /// </summary>
-        /// <param name="text">String do próby przekonwertowania na poprawną długość sztabki.</param>
-        /// <param name="rezultat">Komunikat błędu (user-friendly).</param>
+        /// <param name="value">Parsed string.</param>
+        /// <param name="msg">User-friendly error message.</param>
         /// <returns></returns>
-        private bool WprowadzonoPoprawnieSztabke(float wartosc, out string rezultat)
+        private bool CheckUserInput(float value, out string msg)
         {
 
-            if (wartosc <= 0)
+            if (value <= 0)
             {
-                rezultat = "Długość sztabki musi być dodatnia.";
-                wartosc = 0;
+                msg = "Długość sztabki musi być dodatnia."; // TODO: make language dependent
+                value = 0;
                 return false;
             }
-            else if (wartosc == 0)
+            else if (value == 0)
             {
-                rezultat = "Wprowadź długość sztabki!";
-                dlugoscSztabki = 0;
+                msg = "Wprowadź długość sztabki!";  // TODO: make language dependent
+                barLength = 0;
                 return false;
             }
 
-            rezultat = wartosc.ToString();
+            msg = value.ToString();
             return true;
-            //float dummy;
-            //return WprowadzonoPoprawnieSztabke(text, out dummy, out rezultat);
         }
 
         /// <summary>
-        /// Zapytaj użytkownika, czy chce poprawić powtarzające się dane.
+        /// Ask user if they want to correct data by merging same length counts
         /// </summary>
-        /// <returns> Prawde jeśli nie chce poprawić a dodać dane do siebie. </returns>
-        private bool DodawajDane()
+        /// <returns> True if user decided to correct data. </returns>
+        private bool AskUserToCorrectData()
         {
-            if (!zdecydowalZeDodaje)
+            if (!userDecidedToAdd)
             {
                 MessageBoxResult r =
                    MessageBox.Show("Długości wprowadzonych elementów powtarzają się.\nCzy dodać do siebie podane ilości elementów o identycznych długościach?",
-                   "Powtarzające się dane", MessageBoxButton.OKCancel, MessageBoxImage.Question);
+                   "Powtarzające się dane", MessageBoxButton.OKCancel, MessageBoxImage.Question);  // TODO: make language dependent
                 if (r == MessageBoxResult.Cancel || r == MessageBoxResult.None) return false;
-                else zdecydowalZeDodaje = true;
+                else userDecidedToAdd = true;
             }
             return true;
         }
 
         /// <summary>
         /// Wykonuje obliczenia dla "profil". Zwraca fałsz w prypadku błędu.
+        /// Starts calculations for profile. Returns false in case of error.
         /// </summary>
-        /// <param name="profil">Na jakim profilu ma wykonać.</param>
-        /// <param name="kontynuuj">Czy będzie wiele profilów do wyświetlenia.</param>
+        /// <param name="profile">Calculate for which profile.</param>
+        /// <param name="continue">Continue if more profiles to show.</param>
         /// <returns></returns>
-        private bool ObliczProfil(Calculations profil, bool kontynuuj)
+        private bool CalculateForProfile(Calculations profile, bool @continue) // TODO: make language dependent
         {
 
-            foreach (var dana in profil.Resources)
+            foreach (var dana in profile.Resources)
             {
                 string errorMessage;
-                if (!WprowadzonoPoprawnieSztabke(profil.mainBarLength, out errorMessage))
+                if (!CheckUserInput(profile.mainBarLength, out errorMessage))
                 {
-                    errorMessage += "\nBłąd wystąpił w profilu " + profil.profile.profileName + ".\nSprawdź pole zaznaczone na czerwono.";
+                    errorMessage += "\nBłąd wystąpił w profilu " + profile.profile.profileName + ".\nSprawdź pole zaznaczone na czerwono.";
                     MessageBox.Show(errorMessage, "Błędne dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
 
-                if (dana.length > profil.mainBarLength)
+                if (dana.length > profile.mainBarLength)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profil.profile.profileName,
-                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
+                    MessageBox.Show("Długość każdego elementu musi być\nmniejsza od długości sztabki.\nBłąd wystąpił w profilu " + profile.profile.profileName,
+                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk); 
                     return false;
                 }
                 if (dana.length <= 0)
                 {
-                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profile.profileName,
+                    MessageBox.Show("Długość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profile.profile.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
                 if (dana.quantity <= 0)
                 {
-                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profil.profile.profileName,
+                    MessageBox.Show("Ilość każdego elementu musi być dodatnia.\nBłąd wystąpił w profilu " + profile.profile.profileName,
                        "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                     return false;
                 }
             }
 
-            try
-            {
-                //BackgroundWorker worker = new BackgroundWorker();
-                //worker.WorkerReportsProgress = true;
-                //worker.DoWork += worker_DoWork;
-                //worker.ProgressChanged += worker_ProgressChanged;
-                //worker.RunWorkerCompleted += worker_RunWorkerCompleted;
-                //worker.RunWorkerAsync(profil);
-                wynik = profil.RunCalculations();
-            }
-            catch
-            {
-                //MessageBox.Show("Fatalny błąd związany z obliczeniami. Profil: "+profil.ToString(), "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-                // return false;
-            }
-            zdecydowalZeDodaje = false;
+            // TODO: Create thread
+            result = profile.RunCalculations();
 
-            if (!kontynuuj)
-                WynikTB.Clear();
-            if(profil.profile.presentationName!="")
-                WynikTB.Text += "PROFIL " + profil.profile.presentationName + ":\n";
-            WynikTB.Text+=WyswietlWyniki();
+            userDecidedToAdd = false;
+
+            if (!@continue)
+                ResultTB.Clear();
+            if(profile.profile.presentationName!="")
+                ResultTB.Text += "PROFIL " + profile.profile.presentationName + ":\n"; // TODO: make language dependent
+            ResultTB.Text+=ShowResults();
             return true;
         }
 
         /// <summary>
-        /// Wyświtela wynik obliczeń w TextBox.
+        /// Shows results to user.
         /// </summary>
-        /// <param name="dodajDoWyniku">Czy ma zaktualizować wynik? Gdy false to podmienia</param>
-        private string WyswietlWyniki()
+        private string ShowResults() // TODO: make language dependent
         {
             String t = "";
-            float sumaResztek = 0;
+            float wasteSum = 0;
             if (!ShortCB.IsChecked.Value)
             {
                 t += "Algorytm zakończył działanie!\n\n";
-                foreach (var u in wynik)
+                foreach (var u in result)
                 {
                     if (u.BarAmount > 0)
                     {
@@ -339,26 +325,26 @@ namespace bar_length_calculator
 
                         t += u.ToString(ShowMode.Default);
                         t += "Pozostałe resztki: " + u.Remnant().ToString() + " cm\n\n";
-                        sumaResztek += u.Remnant() * u.BarAmount;
+                        wasteSum += u.Remnant() * u.BarAmount;
 
                     }
                 }
-                t += "Suma wszystkich odpadów to: " + sumaResztek;
+                t += "Suma wszystkich odpadów to: " + wasteSum;
 
             }
             else
             {
-                foreach (var u in wynik)
+                foreach (var u in result)
                 {
                     if (u.BarAmount > 0)
                     {
                         t += u.BarAmount.ToString() + " x sztanga:\n";
                         t += u.ToString(ShowMode.Short);
                         t += "    Odpad: " + u.Remnant().ToString() + " cm\n";
-                        sumaResztek += u.Remnant() * u.BarAmount;
+                        wasteSum += u.Remnant() * u.BarAmount;
                     }
                 }
-                t += "Suma odpadów: " + sumaResztek + " cm";
+                t += "Suma odpadów: " + wasteSum + " cm";
             }
 
             
@@ -366,96 +352,85 @@ namespace bar_length_calculator
             
         }
 
-        // OBSŁUGA PRZYCISKÓW I INNYCH CONTROLSÓW:
-            // Górny panel:
+        // HANDILNG BUTTONS AND OTHER INTERACTIVE UI ELEMENTS
+            // Upper panel:
 
-        private void ProfilCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ProfileCB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (profilCB.SelectedItem != null)
-                ZmianaProfilu(profilCB.SelectedItem as Calculations);
+            if (ProfileCB.SelectedItem != null)
+                ChangeProfile(ProfileCB.SelectedItem as Calculations);
             else
-                PasekInformacji.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + wersja;
+                BottomStrip.Text = "Witaj " + Environment.UserName + " w programie Kalkulator Sztabek v." + version;
         }
 
-        private void SztabkaTB_LostFocus(object sender, RoutedEventArgs e)
+        private void BarTB_LostFocus(object sender, RoutedEventArgs e)
         {
-            UstawSztabke();
+            ValidateBar();
         }
 
-        private void NowyProfilB_Click(object sender, RoutedEventArgs e)
+        private void NewProfileB_Click(object sender, RoutedEventArgs e)
         {
-            NewProfileWindow okienko = new NewProfileWindow();
-            if (okienko.ShowDialog() == true)
+            NewProfileWindow dialog = new NewProfileWindow();
+            if (dialog.ShowDialog() == true)
             {
-                Calculations nowyProfil = new Calculations(okienko.SelectedProfile);
+                Calculations nowyProfil = new Calculations(dialog.SelectedProfile);
 
-                profile.Add(nowyProfil);
-                ZmianaProfilu(nowyProfil);
-                sztabkaTB.Text = okienko.DlugoscTBX.Text;
-                UstawSztabke();
-                profilCB.Items.Refresh();
-                BlokadaEdycji(true);
+                profiles.Add(nowyProfil);
+                ChangeProfile(nowyProfil);
+                barTB.Text = dialog.DlugoscTBX.Text;
+                ValidateBar();
+                ProfileCB.Items.Refresh();
+                BlockModification(true);
             }
         }
 
-        private void UsunProfilB_Click(object sender, RoutedEventArgs e)
+        private void DeleteProfileB_Click(object sender, RoutedEventArgs e)
         {
-            if(MessageBox.Show("Czy na pewno chcesz usunąć profil "+edytowany_profil.ToString()+" z obliczeń?","Potwierdź",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)==MessageBoxResult.Yes)
+            // TODO: make language dependent
+            if (MessageBox.Show("Czy na pewno chcesz usunąć profil "+currentProfile.ToString()+" z obliczeń?","Potwierdź",MessageBoxButton.YesNo,MessageBoxImage.Question,MessageBoxResult.No)==MessageBoxResult.Yes)
             {
-                if (profile.Count == 1)
+                if (profiles.Count == 1)
                 {
-                    profilCB.SelectedItem = null;
-                    profile.Clear();
-                    BlokadaEdycji();
-                    edytowany_profil.Resources.Clear();
+                    ProfileCB.SelectedItem = null;
+                    profiles.Clear();
+                    BlockModification();
+                    currentProfile.Resources.Clear();
                 }
                 else
                 {
-                    profile.Remove(edytowany_profil);
-                    profilCB.SelectedItem = profile.Last();
+                    profiles.Remove(currentProfile);
+                    ProfileCB.SelectedItem = profiles.Last();
                 }
-                profilCB.Items.Refresh();
-                tabelaElementow.Items.Refresh();
+                ProfileCB.Items.Refresh();
+                ElementsTable.Items.Refresh();
             }
         }
 
-        private void ObliczB_Click(object sender, RoutedEventArgs e)
+        private void CalculateB_Click(object sender, RoutedEventArgs e)
         {
            
             
 
-            if (profile.Count > 0)
+            if (profiles.Count > 0)
             {
-                WynikTB.Text = "";
-                foreach (var p in profile)
+                ResultTB.Text = "";
+                foreach (var p in profiles)
                     if (p.Resources.Count > 0)
                     {
                         
-                        ObliczProfil(p, true);
+                        CalculateForProfile(p, true);
                     }
                         
             }
             else MessageBox.Show("Z pustego i Salomon nie naleje.", "Brak profili", MessageBoxButton.OK, MessageBoxImage.Warning);
-            PasekInformacji.Text = "Algorytm zakończył działanie! Edytujesz: " + edytowany_profil.ToString();
+            BottomStrip.Text = "Algorytm zakończył działanie! Edytujesz: " + currentProfile.ToString();
         }
 
-        /*
-        void worker_DoWork(object sender, DoWorkEventArgs e)
-		{
-			
-		}
+            // Lower panel:
 
-        void worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void AddB_Click(object sender, RoutedEventArgs e) // TODO: make language dependent
         {
-            PasekInformacji.Text = "Obliczanie... " + Convert.ToInt32(e.ProgressPercentage/100.0*profile.Count()) + "%";
-        }
-        */
-
-        // Dolny Panel:
-
-        private void DodajB_Click(object sender, RoutedEventArgs e)
-        {
-            if (edytowany_profil != null)
+            if (currentProfile != null)
             {
                 float probaFloat;
                 int probaInt;
@@ -468,7 +443,7 @@ namespace bar_length_calculator
                         DlugoscTB.Focus();
                         return;
                     }
-                    else if(probaFloat>edytowany_profil.mainBarLength && edytowany_profil.mainBarLength!=0)
+                    else if(probaFloat>currentProfile.mainBarLength && currentProfile.mainBarLength!=0)
                     {
                         MessageBox.Show("Długości elementu nie może być większa od długości sztabki.", "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
                         DlugoscTB.Focus();
@@ -480,23 +455,22 @@ namespace bar_length_calculator
                         if (probaInt <= 0)
                         {
                             MessageBox.Show("Ilość elementów musi być dodatnia.", "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                            //IleTB.Text = "";
                             IleTB.Focus();
                         }
                         else
                         {
                             ElementObject ell = new ElementObject(probaFloat, probaInt);
 
-                            if (!edytowany_profil.AddResource(ell))
+                            if (!currentProfile.AddResource(ell))
                             {
 
                                 if (MessageBox.Show("Element o takiej długości już został dodany.\nCzy dodać wprowadzoną ilość (" + ell.quantity + ") do istniejącej?",
                                     "Powtarzające się dane", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                                 {
-                                    edytowany_profil.IncreaseExistingResource(ell.length, ell.quantity);
+                                    currentProfile.IncreaseExistingResource(ell.length, ell.quantity);
                                 }
                             }
-                            tabelaElementow.Items.Refresh();
+                            ElementsTable.Items.Refresh();
                             IleTB.Text = "";
                             DlugoscTB.Text = "";
                             DlugoscTB.Focus();
@@ -505,14 +479,11 @@ namespace bar_length_calculator
                     else
                     {
                         MessageBox.Show("Pole ilości elementów może składać się\nwyłącznie z cyfr i znkau \",\"", "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                        //IleTB.Text = "";
                         IleTB.Focus();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Pole długości sztabki może składać się\nwyłącznie z cyfr i znkau \",\"", "Nieprawidłowe dane", MessageBoxButton.OK, MessageBoxImage.Asterisk);
-                    //DlugoscTB.Text = "";
                     DlugoscTB.Focus();
                 }
             }
@@ -522,39 +493,36 @@ namespace bar_length_calculator
             }
         }
 
-        private void UsunB_Click(object sender, RoutedEventArgs e)
+        private void DeleteB_Click(object sender, RoutedEventArgs e)
         {
 
             List<ElementObject> lista = new List<ElementObject>();
             ElementObject temp_e;
-            foreach (var item in tabelaElementow.SelectedCells)
+            foreach (var item in ElementsTable.SelectedCells)
             {
                 temp_e = (ElementObject)item.Item;
                 lista.Add(temp_e);
-
-                //edytowany_profil.Zasoby.Remove(item.Item as ElementyObiekt); z jakiegoś powodu nie dizała poprawnie,
-                // zapewne jeden foreach wykonuje się 4 razy przy 2 zaznaczeniach bo są 4 komórki
             }
             foreach (var item in lista)
             {
-                edytowany_profil.Resources.Remove(item);
+                currentProfile.Resources.Remove(item);
             }
-            tabelaElementow.Items.Refresh();
+            ElementsTable.Items.Refresh();
         }
 
-        private void Wyczysc_Click(object sender, RoutedEventArgs e)
+        private void ClearB_Click(object sender, RoutedEventArgs e)
         {
-            edytowany_profil.Resources.Clear();
+            currentProfile.Resources.Clear();
 
-            tabelaElementow.Items.Refresh();
+            ElementsTable.Items.Refresh();
         }
 
-        private void DlugoscTB_TextChanged(object sender, TextChangedEventArgs e)
+        private void LengthTB_TextChanged(object sender, TextChangedEventArgs e)
         {
-            SprawdzDlugoscElementu();
+            ValidateElementsLength();
         }
 
-        private void IleTB_TextChanged(object sender, TextChangedEventArgs e)
+        private void AmountTB_TextChanged(object sender, TextChangedEventArgs e) // TODO: make language dependent
         {
             int test;
             if(String.IsNullOrWhiteSpace(IleTB.Text))
