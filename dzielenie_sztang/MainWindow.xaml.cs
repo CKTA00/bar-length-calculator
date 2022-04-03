@@ -408,9 +408,6 @@ namespace bar_length_calculator
 
         private void CalculateB_Click(object sender, RoutedEventArgs e)
         {
-           
-            
-
             if (profiles.Count > 0)
             {
                 ResultTB.Text = "";
@@ -422,8 +419,8 @@ namespace bar_length_calculator
                     }
                         
             }
-            else MessageBox.Show("Z pustego i Salomon nie naleje.", "Brak profili", MessageBoxButton.OK, MessageBoxImage.Warning);
-            BottomStrip.Text = "Algorytm zakończył działanie! Edytujesz: " + currentProfile.ToString();
+            else MessageBox.Show("Brak kluczowych danych dotyczących proflili.", "Brak profili", MessageBoxButton.OK, MessageBoxImage.Warning); // TODO: make language dependent
+            BottomStrip.Text = "Algorytm zakończył działanie! Edytujesz: " + currentProfile.ToString(); // TODO: make language dependent
         }
 
             // Lower panel:
