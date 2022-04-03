@@ -129,12 +129,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleApp1\rdzen_obliczeniowy.csproj">
-      <Project>{76b63616-3bd6-4141-acbb-5422b95f59b0}</Project>
-      <Name>rdzen_obliczeniowy</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.6.1">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.6.1 %28x86 i x64%29</ProductName>
