@@ -14,33 +14,33 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 
-namespace dzielenie_sztang
+namespace bar_length_calculator
 {
     /// <summary>
-    /// Logika interakcji dla klasy NowyProfil.xaml
+    /// Logic behind interaction with New Profile Window
     /// </summary>
-    public partial class NowyProfil : Window
+    public partial class NewProfileWindow : Window
     {
-        public ObservableCollection<Profil> lista_profili { get; set; }
+        public ObservableCollection<BarProfile> profilesList { get; set; }
 
-        public Profil WybranyProfil {
+        public BarProfile SelectedProfile {
             get
             {
-                if ((bool)ZLlistyRB.IsChecked)
+                if ((bool)FromListRB.IsChecked)
                 {
-                    return ProfilZListyCBX.SelectedItem as Profil;
+                    return ProfileOfListCBX.SelectedItem as BarProfile;
                 }
                 else
                 {
-                    return new Profil(DowolnyTBX.Text);
+                    return new BarProfile(CustomTBX.Text);
                 }
             }
         }
 
-        public NowyProfil()
+        public NewProfileWindow()
         {
-            bool brak_pliku = false;
-            lista_profili = new ObservableCollection<Profil>();
+            bool noFile = false;
+            profilesList = new ObservableCollection<BarProfile>();
             try
             {
                 string[] lines = System.IO.File.ReadAllLines(Environment.CurrentDirectory + "\\profile.txt");
@@ -48,39 +48,39 @@ namespace dzielenie_sztang
                 {
                     foreach (var line in lines)
                     {
-                        lista_profili.Add(new Profil(line));
+                        profilesList.Add(new BarProfile(line));
                     }
                 }
             }
             catch
             {
-                brak_pliku = true;
+                noFile = true;
             }
            
-            if(lista_profili.Count<=0)
+            if(profilesList.Count<=0)
             {
-                brak_pliku = true;
+                noFile = true;
             }
 
             InitializeComponent();
-            ProfilZListyCBX.ItemsSource = lista_profili;
-            ProfilZListyCBX.Items.Refresh();
-            DowolnyRB.IsChecked = brak_pliku;
-            ZLlistyRB.IsEnabled = !brak_pliku;
-            if(!brak_pliku)
+            ProfileOfListCBX.ItemsSource = profilesList;
+            ProfileOfListCBX.Items.Refresh();
+            CustomRB.IsChecked = noFile;
+            FromListRB.IsEnabled = !noFile;
+            if(!noFile)
             {
-                ProfilZListyCBX.SelectedItem = lista_profili.First();
+                ProfileOfListCBX.SelectedItem = profilesList.First();
             }
         }
 
-        private void DodajBT_Click(object sender, RoutedEventArgs e)
+        private void AddBT_Click(object sender, RoutedEventArgs e)
         {
-            if((bool)DowolnyRB.IsChecked && (bool)ZapiszProfilCB.IsChecked)
+            if((bool)CustomRB.IsChecked && (bool)SaveProfileCB.IsChecked)
             {
                 using (StreamWriter file =
                 new StreamWriter(Environment.CurrentDirectory + "\\profile.txt", true))
                 {
-                    file.WriteLine(DowolnyTBX.Text);
+                    file.WriteLine(CustomTBX.Text);
                 }
             }
 
