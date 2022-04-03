@@ -50,13 +50,13 @@
 
                     <Button x:Name="NowyProfilB" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" IsTabStop="False" Click="NewProfileB_Click" ToolTip="Dodaj nowy profil do obliczeń">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <Image Source="img/prof_nowy.png" Margin="1"></Image>
+                            <Image Source="img/prof_new.png" Margin="1"></Image>
                             <!--<TextBlock VerticalAlignment="Center" Margin="2">nowy profil</TextBlock>-->
                         </StackPanel>
                     </Button>
                     <Button x:Name="DeleteProfileB" HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" IsTabStop="False" Click="DeleteProfileB_Click" ToolTip="Usuń zaznaczony profil z obliczeń.">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <Image Margin="1" Source="img/prof_usun.png"></Image>
+                            <Image Margin="1" Source="img/prof_del.png"></Image>
                         </StackPanel>
                     </Button>
                     <Button x:Name="CalculateB" Content=" oblicz "  HorizontalAlignment="Left"  VerticalAlignment="Center" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" FontWeight="SemiBold" Click="CalculateB_Click" IsTabStop="False" ToolTip="Oblicz optymalny podział dla wszystkich dodanych pofili."/>
@@ -95,7 +95,7 @@
                     </Button>
                     <Button x:Name="WyczyscB" Click="ClearB_Click" Height="{StaticResource BtH}" MinWidth="{StaticResource BtH}" ToolTip="Wyczyść całą liste." IsTabStop="False">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <Image Margin="1" Source="img/elem_czysc.png"></Image>
+                            <Image Margin="1" Source="img/elem_clear.png"></Image>
                             <TextBlock VerticalAlignment="Center" Margin="2">wyczyść</TextBlock>
                         </StackPanel>
                     </Button>
