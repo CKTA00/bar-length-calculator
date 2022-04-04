@@ -1,5 +1,5 @@
-## Bar length calculator
-### Overview 
+# Bar length calculator
+## Overview 
 Bar length calculator is application capable of calculating optimal cut of bar with given length (main bar) to shorter bars, given their lengths and amount of each kind (called elements).
 Multiple profiles can be included, each consisting of different main bar length and their sets of elements.
 Application is aimed for enterprise use, with GUI created using Windows Presentation Foundation.
@@ -9,19 +9,19 @@ Application is aimed for enterprise use, with GUI created using Windows Presenta
 
 Image showing just opened application:
 
-![obraz](https://user-images.githubusercontent.com/72377791/161540259-13369c76-c4ec-46aa-a72c-69a122b2595d.png)
+![img](https://user-images.githubusercontent.com/72377791/161540259-13369c76-c4ec-46aa-a72c-69a122b2595d.png)
 
 MainWindow after filling data and performing calculation:
 
-![obraz](https://user-images.githubusercontent.com/72377791/161540681-ad02e90e-1c5e-4ed8-b492-e211d77126c7.png)
+![img](https://user-images.githubusercontent.com/72377791/161540681-ad02e90e-1c5e-4ed8-b492-e211d77126c7.png)
 
 For now the only supported language is polish.
 
 **NewProfileWindow** is a simple dialog that will appear after clicking create new profile button. It allows to chose name and length of a profile or create new name and save it.
 
-![obraz](https://user-images.githubusercontent.com/72377791/161541001-a1ab97a6-e0fd-424b-93ca-f696daa98a4a.png)
+![img](https://user-images.githubusercontent.com/72377791/161541001-a1ab97a6-e0fd-424b-93ca-f696daa98a4a.png)
 
-#### Buttons and their respecting meainings:
+#### Buttons and their respective meanings:
 
 <img
   src="/bar_length_calculator_project/img/prof_new.png"
